@@ -13,6 +13,8 @@ import QrScanner from '../main/QrScanner'
 import QrGenerator from '../main/QrGenerator'
 import Settings from '../Settings'
 import History from '../History'
+import ScanDone from '../screens/ScanDone'
+import QR from '../screens/QR'
 
 const Index = () => {
     const Stack = createNativeStackNavigator()
@@ -29,6 +31,8 @@ const Index = () => {
         <Stack.Screen name='QrWhatsapp' component={QrWhatsapp} />
         <Stack.Screen name='QrWifi' component={QrWifi} />
          <Stack.Screen name='Settings' component={Settings} />
+         <Stack.Screen name='ScanDone' component={ScanDone} />
+         <Stack.Screen name='QR' component={QR}/>
     </Stack.Navigator>
   )
 }

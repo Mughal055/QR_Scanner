@@ -14,14 +14,14 @@ const QrGenerator = () => {
       
         <View style={styles.grid}>
           <TypeCard title={'URL'} onPress={() => navigation.navigate('QRurl')} icon="link-outline" />
-          <TypeCard title={'Text'} onPress={() => navigation.navigate('QRtext')} icon="text" />
-          <TypeCard title={'Email'} onPress={() => navigation.navigate('QRemail')} icon="mail-outline" />
-          <TypeCard title={'Phone'} onPress={() => navigation.navigate('QrPhone')} icon="call-outline" />
-          <TypeCard title={'Contact'} onPress={() => navigation.navigate('QrContact')} icon="chatbox-ellipses-outline" />
+        <TypeCard title={'Text'} onPress={() => navigation.navigate('QRtext')} icon="text" />
+        <TypeCard title={'Email'} onPress={() => navigation.navigate('QRemail')} icon="mail-outline" />
+        <TypeCard title={'Phone'} onPress={() =>  navigation.navigate('QrPhone')} icon="call-outline" />
+      <TypeCard title={'Contact'} onPress={() => navigation.navigate('QrContact')} icon="chatbox-ellipses-outline" />
           <TypeCard title={'SMS'} onPress={() => navigation.navigate('QrSMS')} icon="chatbox-ellipses-outline" />
-          <TypeCard title={'VCard'} onPress={() => navigation.navigate('QrVcard')} icon="id-card-outline" />
-          <TypeCard title={'WhatsApp'} onPress={() => navigation.navigate('QrWhatsapp')} icon="logo-whatsapp" />
-          <TypeCard title={'WiFi'} onPress={() => navigation.navigate('QrWifi')} icon="wifi" />
+        <TypeCard title={'VCard'} onPress={() => navigation.navigate('QrVcard')} icon="id-card-outline" />
+     <TypeCard title={'WhatsApp'} onPress={() => navigation.navigate('QrWhatsapp')} icon="logo-whatsapp" />
+         <TypeCard title={'WiFi'} onPress={() => navigation.navigate('QrWifi')} icon="wifi" />
         </View>
       
     </SafeAreaView>

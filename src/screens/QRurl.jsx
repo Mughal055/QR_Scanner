@@ -1,12 +1,23 @@
-import { View, Text } from 'react-native'
 import React from 'react'
-import {FrameScreens} from '../component/FrameScreens'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import GenerateCard from '../component/GenerateCard'
+import useGenerateHook from '../Hooks/useGenerateHook'
 
 const QRurl = () => {
+  // Hook sirf yahan call hoga, baqi components ko props milenge
+  const { onClear, onCreate, qrData, input, setInput } = useGenerateHook()
+
   return (
-    <View>
-      <Text>QRurl</Text>
-    </View>
+    <SafeAreaView>
+      <GenerateCard
+        type='url'
+        onClear={onClear}
+        onCreate={onCreate}
+        qrData={qrData}
+        input={input}
+        setInput={setInput}
+      />
+    </SafeAreaView>
   )
 }
 

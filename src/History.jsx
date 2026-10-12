@@ -1,24 +1,38 @@
-import { View, Text, StyleSheet, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Pressable, TouchableOpacity, FlatList } from 'react-native'
 import React,{useState} from 'react'
 import Header from './component/Header'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import ScanHistoryCard from './component/ScanHistoryCard'
+import { useFocusEffect } from '@react-navigation/native'
+import { useCallback } from 'react'
+import { getScan } from './Database/Models'
 
 const History = () => {
     const [ActiveTab, setActiveTab] = useState(true)
+    const [scan, setScan] = useState([])
+    // 
+    useFocusEffect(
+        useCallback(()=>{
+            getScan().then(setScan).catch(console.log)
+        },[])
+    )
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+        <SafeAreaView style={{ flex: 1, }}>
             <Header title={'History'} />
 
             {/*  scanner Content */}
             
-            <View style={{backgroundColor:'red'}}>
-                {ActiveTab &&<View>
-                <Text>edit</Text>
-                <Text>edit</Text>
-                <Text>edit</Text>
-                <Text>edit</Text>
-            </View>}
-            </View>
+            
+                {ActiveTab && (
+                <FlatList
+                    style={{ flex: 1 }}
+                    data={scan}
+                    keyExtractor={(item) => String(item.id)}
+                    ListEmptyComponent={<Text style={styles.text}>Abhi koi scan nahi hai</Text>}
+                    renderItem={({ item }) => <ScanHistoryCard item={item} />}
+                />
+            )}
+            
 
            {/*  Generated Content */}
 
@@ -33,7 +47,7 @@ const History = () => {
 
             {/* toggle btn */}
 
-            <View style={{flex:1,justifyContent:'flex-end',marginVertical:15}}>
+            <View style={{justifyContent:'flex-end',marginVertical:15}}>
             <View style={ActiveTab?{flexDirection:'row',justifyContent:'center'} : {flexDirection:'row-reverse',justifyContent:'center'}}>
             <View style={ styles.activeView}/>
             <TouchableOpacity onPress={()=>setActiveTab(!ActiveTab)}>

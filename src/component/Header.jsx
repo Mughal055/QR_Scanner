@@ -9,16 +9,16 @@ const Header = ({ title, icon }) => {
   return (
     <View style={styles.container}>
       {/* Back button */}
-       {icon ? (
+       {icon?(
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.9}
           onPress={() => navigation.goBack()}>
-          <Ionicons name={icon} size={22} color="#000" />
-        </TouchableOpacity>
-      ) : (
-        <View style={styles.placeholder} />
-      )}
+          <Ionicons name={'arrow-back-outline'} size={22} color="#000" />
+        </TouchableOpacity>)
+       :(
+        <View style={styles.placeholder} ></View>
+       )}
 
       {/* Title */}
       <Text style={styles.title}>{title}</Text>
@@ -64,5 +64,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 2,
     color: '#000',
+    textAlign:'center'
   },
+  placeholder:{
+    height:55,
+    width:55
+  }
 });

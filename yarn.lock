@@ -1373,6 +1373,16 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@op-engineering/op-sqlite@^18.2.5":
+  version "18.2.5"
+  resolved "https://registry.yarnpkg.com/@op-engineering/op-sqlite/-/op-sqlite-18.2.5.tgz#2c66e7c563fdb81de58a156616cb88e68ac8d296"
+  integrity sha512-OLmcM0SQLapP1p5Q6Ck5P+V3N6RsAhBozIG07PbQr+8wgB0gYoFgFjuWZK0JvNBY+UYgYPxkOQDd4rk4naWNGw==
+
+"@react-native-clipboard/clipboard@^1.16.3":
+  version "1.16.3"
+  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.16.3.tgz#7807a90fd9984bf4d3a96faf2eee20457984a9bd"
+  integrity sha512-cMIcvoZKIrShzJHEaHbTAp458R9WOv0fB6UyC7Ek4Qk561Ow/DrzmmJmH/rAZg21Z6ixJ4YSdFDC14crqIBmCQ==
+
 "@react-native-community/cli-clean@20.2.0":
   version "20.2.0"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-clean/-/cli-clean-20.2.0.tgz#6869513f657df5879069c26bcdc0e8d0161f6627"
@@ -1550,6 +1560,11 @@
   version "0.87.1"
   resolved "https://registry.yarnpkg.com/@react-native/asset-utils/-/asset-utils-0.87.1.tgz#b8a129103bf270b74964ba3b21abcb791385ff06"
   integrity sha512-FeFnbn9ENPs7IVBzZt1bBWfiRGvT4q+CsWwXGFyKVW/1ol3ylBRuTtXBGHIAmcNN4fUR60nSXsCN19pzNHkPgA==
+
+"@react-native/assets-registry@0.87":
+  version "0.87.1"
+  resolved "https://registry.yarnpkg.com/@react-native/assets-registry/-/assets-registry-0.87.1.tgz#1cc5c9588a1a9df98871d57dc3a09d9a86b1a6d0"
+  integrity sha512-XmE1I4YM61ariwFMm9gAd5FnqztP89qDx1WVKJMQTxI/g+V8riuwJts33hsFkR0lC0Mj8oc+V4L/AXk3F9XseA==
 
 "@react-native/babel-plugin-codegen@0.87.1":
   version "0.87.1"
