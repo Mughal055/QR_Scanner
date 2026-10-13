@@ -1,56 +1,139 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 import Ionicons from '@react-native-vector-icons/ionicons'
-import { useNavigation } from '@react-navigation/native'
 import URLQR from './URLQR'
-import Header from './Header'
 import TEXTQR from './TEXTQR'
-import useGenerateHook from '../Hooks/useGenerateHook'
+import EMAILQR from './EMAILQR'
+import PHONEQR from './PHONEQR'
+import CONTACTQR from './CONTACTQR'
+import SMSQR from './SMSQR'
+import VCARDQR from './VCARDQR'
+import WIFIQR from './WIFIQR'
+import WAPPQR from './WAPPQR'
 
-const GenerateCard = ({ type,onClear, onCreate, input, setInput  }) => {
-  const navigation = useNavigation()
-
-  const handleCreate = () => {
-    const value = input ?input : 'https://www.google.com/'
-    onCreate()
-    // state async update hoti hai, isliye seedha current input bhej rahe hain
-    navigation.navigate('QR', { qrData: value })
-  }
-
+const GenerateCard = ({
+  vcard,
+  type,
+  onClear,
+  handleCreate,
+  input,
+  setInput,
+  // email aur contact
+  email,
+  setEmail,
+  // email
+  subject,
+  setSubject,
+  body,
+  setBody,
+  // contact aur sms
+  name,
+  setName,
+  phone,
+  setPhone,
+  // sms
+  message,
+  setMessage,
+  // wifi
+  ssid,
+  setSsid,
+  password,
+  setPassword,
+  encryption,
+  setEncryption,
+}) => {
   return (
-    <>
-      <Header icon={true} title={'QR URL'} />
-      <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-        <View style={styles.container}>
-            {/*  */}
-          {type === 'url' && <URLQR input={input} setInput={setInput} />}
-          {type === 'text' && <TEXTQR input={input} setInput={setInput}/>}
-          {/*  */}
-        </View>
+    <ScrollView
+      contentContainerStyle={styles.scroll}
+      keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}>
+      <View style={styles.container}>
+        {type === 'url' && <URLQR input={input} setInput={setInput} />}
 
-        <View style={{ flexDirection: 'row' }}>
-          {/* Clear button */}
-          <TouchableOpacity onPress={onClear} style={styles.card}>
-            <Ionicons name="trash-bin" size={20} />
-            <Text style={styles.btnText}>Clear</Text>
-          </TouchableOpacity>
+        {type === 'text' && <TEXTQR input={input} setInput={setInput} />}
 
-          {/* Create button */}
-          <TouchableOpacity style={styles.card} onPress={handleCreate}>
-            <Ionicons name="qr-code-outline" size={20} />
-            <Text style={styles.btnText}>Create</Text>
-          </TouchableOpacity>
-        </View>
+        {type === 'email' && (
+          <EMAILQR
+            email={email}
+            setEmail={setEmail}
+            subject={subject}
+            setSubject={setSubject}
+            body={body}
+            setBody={setBody}
+          />
+        )}
+
+        {type === 'phone' && <PHONEQR input={input} setInput={setInput} />}
+
+        {type === 'contact' && (
+          <CONTACTQR
+            name={name}
+            setName={setName}
+            phone={phone}
+            setPhone={setPhone}
+            email={email}
+            setEmail={setEmail}
+          />
+        )}
+
+        {type === 'sms' && (
+          <SMSQR
+            phone={phone}
+            setPhone={setPhone}
+            message={message}
+            setMessage={setMessage}
+          />
+        )}
+
+        {type === 'whatsapp' && (
+          <WAPPQR
+            phone={phone}
+            setPhone={setPhone}
+            message={message}
+            setMessage={setMessage}
+          />
+        )}
+
+        {type === 'vcard' && <VCARDQR vcard={vcard} />}
+
+        {type === 'wifi' && (
+          <WIFIQR
+            ssid={ssid}
+            setSsid={setSsid}
+            password={password}
+            setPassword={setPassword}
+            encryption={encryption}
+            setEncryption={setEncryption}
+          />
+        )}
       </View>
-    </>
+
+      <View style={{ flexDirection: 'row' }}>
+        {/* Clear button */}
+        <TouchableOpacity onPress={onClear} style={styles.card}>
+          <Ionicons name="trash-bin" size={20} />
+          <Text style={styles.btnText}>Clear</Text>
+        </TouchableOpacity>
+
+        {/* Create button */}
+        <TouchableOpacity onPress={handleCreate} style={styles.card}>
+          <Ionicons name="qr-code-outline" size={20} />
+          <Text style={styles.btnText}>Create</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
+  scroll: {
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 120, // aakhri buttons ke neeche jagah, taake screen ke kinare se na lagen
+  },
   container: {
     width: '80%',
     minHeight: 120,
-    maxHeight: '100%',
     borderRadius: 12,
     borderWidth: 1,
     borderColor: '#E5E5E5',

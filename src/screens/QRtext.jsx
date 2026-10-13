@@ -1,20 +1,23 @@
-import { View, Text } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import GenerateCard from '../component/GenerateCard'
-import useGenerateHook from '../Hooks/useGenerateHook'
+import useTextHook from '../Hooks/useTextHook'
+import Header from '../component/Header'
 
 const QRtext = () => {
-    const { onClear, onCreate, qrData, input, setInput } = useGenerateHook()
+  const { text, setText, onClear, handleCreate } = useTextHook()
+
   return (
     <SafeAreaView>
+      <Header icon={true} title={'QR TEXT'} />
       <GenerateCard
-      type='text'
-      onClear={onClear}
-        onCreate={onCreate}
-        qrData={qrData}
-        input={input}
-        setInput={setInput}  />
+        type="text"
+        title="QR TEXT"
+        onClear={onClear}
+        handleCreate={handleCreate}
+        input={text}
+        setInput={setText}
+      />
     </SafeAreaView>
   )
 }
