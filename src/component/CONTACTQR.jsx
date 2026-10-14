@@ -1,46 +1,33 @@
-import { View, TextInput, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
+import IconInput from './IconInput'
 
 const CONTACTQR = ({ name, setName, phone, setPhone, email, setEmail }) => {
   return (
     <View>
-      <TextInput
+      <IconInput
+        icon="person-outline"
         placeholder="Name"
         value={name}
         onChangeText={setName}
-        style={styles.input}
       />
-      <TextInput
+      <IconInput
+        icon="call-outline"
         placeholder="Phone"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
-        style={styles.input}
       />
-      <TextInput
+      <IconInput
+        icon="mail-outline"
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
-        autoCapitalize="none"
-        style={[styles.input, styles.last]}
+        last
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 20,
-    marginBottom: 0,
-    padding: 20,
-    borderColor: '#9c9494',
-  },
-  last: {
-    marginBottom: 20,
-  },
-})
 
 export default CONTACTQR

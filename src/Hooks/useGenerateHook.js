@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native'
        const value = input ?input : 'https://www.google.com/'
     onCreate()
     // state async update hoti hai, isliye seedha current input bhej rahe hain
-    navigation.navigate('QR', { qrData: value })
+    navigation.navigate('QR', { qrData: value, type: 'uri' })
     }
 
    return {onClear,qrData,setqrData,input,setInput,handleCreate}

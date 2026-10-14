@@ -1,14 +1,16 @@
-import { View, Text ,StyleSheet, TouchableOpacity, Share} from 'react-native'
-import React from 'react'
+import { View, Text ,StyleSheet, TouchableOpacity, Share,} from 'react-native'
+import React,{useState} from 'react'
 import QRCode from 'react-native-qrcode-svg'
 import { useRoute } from '@react-navigation/native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Header from '../component/Header'
 import Ionicons from '@react-native-vector-icons/ionicons'
+import { addGenerate } from '../Database/Models'
 
 const QR = () => {
   const route = useRoute()
-  const {qrData} = route.params ?? {}
+  const {qrData,type} = route.params ?? {}
+  const [saved, setSaved] = useState(false)
   // 
   const send=async()=>{
     try {
@@ -18,6 +20,17 @@ const QR = () => {
       
     }
   }
+  //
+
+const save = async () => {
+  if (saved) return
+  try {
+    await addGenerate(qrData, type)
+    setSaved(true)
+  } catch (err) {
+    console.log('save error', err)
+  }
+}
   return (
     <SafeAreaView style={{flex:1}}>
       <Header icon={true} title={'QR GENERATED'} />
@@ -32,9 +45,9 @@ const QR = () => {
             <Text style={styles.btnText}>Share</Text>
           </TouchableOpacity>
           {/*  */}
-          <TouchableOpacity style={styles.card}>
-            <Ionicons name="save" size={20} />
-            <Text style={styles.btnText}>Save</Text>
+          <TouchableOpacity style={styles.card} onPress={save}>
+            <Ionicons name={saved ? 'checkmark' : 'save'} size={20} />
+  <Text style={styles.btnText}>{saved ? 'Saved' : 'Save'}</Text>
           </TouchableOpacity></View>
           {/*  */}
     </View>

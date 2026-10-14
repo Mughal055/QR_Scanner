@@ -9,3 +9,12 @@ Db.execute(`
    created_at TEXT DEFAULT CURRENT_TIMESTAMP
    ) 
     `)
+
+Db.execute(`
+   CREATE TABLE IF NOT EXISTS generatehis(
+   id INTEGER PRIMARY KEY AUTOINCREMENT,
+   value TEXT NOT NULL,
+   type TEXT NOT NULL,
+   created_at TEXT DEFAULT CURRENT_TIMESTAMP
+   )
+   `)

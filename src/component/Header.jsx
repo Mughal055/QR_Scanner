@@ -3,7 +3,7 @@ import React from 'react';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import { useNavigation } from '@react-navigation/native';
 
-const Header = ({ title, icon }) => {
+const Header = ({ title, icon,settings }) => {
   const navigation = useNavigation();
 
   return (
@@ -24,12 +24,14 @@ const Header = ({ title, icon }) => {
       <Text style={styles.title}>{title}</Text>
 
       {/* Menu button */}
-      <TouchableOpacity
+     {settings?  <View style={styles.placeholder} ></View>:
+     ( <TouchableOpacity
         style={styles.button}
         activeOpacity={0.7}
         onPress={()=>navigation.navigate('Settings')}>
         <Ionicons name="menu" size={22} color="#000" />
-      </TouchableOpacity>
+      </TouchableOpacity>)
+      }
     </View>
   );
 };

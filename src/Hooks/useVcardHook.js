@@ -51,7 +51,7 @@ const useVcardHook = () => {
       'END:VCARD',
     ].filter(Boolean) // khali fields ki lines hata do
 
-    navigation.navigate('QR', { qrData: lines.join('\n') })
+    navigation.navigate('QR', { qrData: lines.join('\n'), type: 'vcard' })
   }
 
   return {

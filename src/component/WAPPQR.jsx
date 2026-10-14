@@ -1,41 +1,27 @@
-import { View, TextInput, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
+import IconInput from './IconInput'
 
 const WAPPQR = ({ phone, setPhone, message, setMessage }) => {
   return (
     <View>
-      <TextInput
+      <IconInput
+        icon="logo-whatsapp"
         placeholder="Phone (with country code)"
         value={phone}
         onChangeText={setPhone}
         keyboardType="phone-pad"
-        style={styles.input}
       />
-      <TextInput
+      <IconInput
+        icon="chatbox-ellipses-outline"
         placeholder="Message"
         value={message}
         onChangeText={setMessage}
-        multiline={true}
-        style={[styles.input, styles.multiline]}
+        multiline
+        last
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 20,
-    marginBottom: 0,
-    padding: 20,
-    borderColor: '#9c9494',
-  },
-  multiline: {
-    minHeight: 100,
-    textAlignVertical: 'top',
-    marginBottom: 20,
-  },
-})
 
 export default WAPPQR

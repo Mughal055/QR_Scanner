@@ -19,7 +19,7 @@ const useContactHook = () => {
   const handleCreate = () => {
     const cleanedPhone = phone.replace(/[^\d+]/g, '')
     const value = `MECARD:N:${esc(name.trim())};TEL:${cleanedPhone};EMAIL:${email.trim()};;`
-    navigation.navigate('QR', { qrData: value })
+    navigation.navigate('QR', { qrData: value, type: 'contact' })
   }
 
   return { name, setName, phone, setPhone, email, setEmail, onClear, handleCreate }

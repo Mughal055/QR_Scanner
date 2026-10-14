@@ -10,7 +10,7 @@ const usePhoneHook = () => {
   const handleCreate = () => {
     // spaces aur dashes hata do, sirf digits aur + rakho
     const cleaned = phone.replace(/[^\d+]/g, '')
-    navigation.navigate('QR', { qrData: `tel:${cleaned}` })
+    navigation.navigate('QR', { qrData: `tel:${cleaned}`, type: 'phone' })
   }
 
   return { phone, setPhone, onClear, handleCreate }

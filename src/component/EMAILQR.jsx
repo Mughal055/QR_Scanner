@@ -1,48 +1,33 @@
-import { View, TextInput, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import React from 'react'
+import IconInput from './IconInput'
 
 const EMAILQR = ({ email, setEmail, subject, setSubject, body, setBody }) => {
   return (
     <View>
-      <TextInput
+      <IconInput
+        icon="at"
         placeholder="To"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
-        autoCapitalize="none"
-        style={styles.input}
       />
-      <TextInput
+      <IconInput
+        icon="mail-outline"
         placeholder="Subject"
         value={subject}
         onChangeText={setSubject}
-        style={styles.input}
       />
-      <TextInput
+      <IconInput
+        icon="chatbox-outline"
         placeholder="Body"
         value={body}
         onChangeText={setBody}
-        multiline={true}
-        style={[styles.input, styles.multiline]}
+        multiline
+        last
       />
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderWidth: 2,
-    borderRadius: 5,
-    margin: 20,
-    marginBottom: 0,
-    padding: 20,
-    borderColor: '#9c9494',
-  },
-  multiline: {
-    minHeight: 100,
-    textAlignVertical: 'top',
-    marginBottom: 20,
-  },
-})
 
 export default EMAILQR

@@ -3,7 +3,8 @@ import {
     Text,
     ScrollView,
     TouchableOpacity,
-    Image,
+    Pressable,
+    Modal,
     Linking,
     Share,
     ToastAndroid,
@@ -12,34 +13,71 @@ import {
 import React, { useState } from 'react'
 import Ionicons from '@react-native-vector-icons/ionicons'
 import Clipboard from '@react-native-clipboard/clipboard'
+import QRCode from 'react-native-qrcode-svg'
 
-const ScanHistoryCard = ({ item }) => {
+// type ke hisaab se icon
+const ICONS = {
+    url: 'link',
+    text: 'text',
+    email: 'mail',
+    phone: 'call',
+    sms: 'chatbox-ellipses',
+    whatsapp: 'logo-whatsapp',
+    wifi: 'wifi',
+    contact: 'person',
+    vcard: 'id-card',
+}
+
+// Open dabane par kaunsa link kholna hai (null matlab open nahi ho sakta)
+const getOpenLink = (type, value) => {
+    if (type === 'url') {
+        return /^https?:\/\//i.test(value) ? value : `https://${value}`
+    }
+    if (type === 'email' || type === 'phone' || type === 'whatsapp') {
+        return value // mailto:, tel:, https://wa.me/ pehle se link hain
+    }
+    if (type === 'sms') {
+        // SMSTO:number:message  ->  sms:number?body=message
+        const [, number = '', ...rest] = value.split(':')
+        const message = rest.join(':')
+        return `sms:${number}${message ? `?body=${encodeURIComponent(message)}` : ''}`
+    }
+    return null // text, wifi, contact, vcard
+}
+
+const ScanHistoryCard = ({ item, onDelete, showQr }) => {
     const [DropDown, setDropDown] = useState(false)
+    const [qrOpen, setQrOpen] = useState(false) // QR popup
 
     // hooks ke baad hi return karein (hooks ka order na bigde)
     if (!item) return null
 
+    // scan mein 'content' hota hai, generate mein 'value'
+    const value = item.value ?? item.content ?? ''
+    const isUrl = /^https?:\/\//i.test(value)
+    // generate mein type column se, scan mein andaza (URL ya Text)
+    const type = item.type ?? (isUrl ? 'url' : 'text')
     const date = item.created_at ? new Date(item.created_at) : new Date()
-    const isUrl = /^https?:\/\//i.test(item.content ?? '')
+    const openLink = getOpenLink(type, value)
 
     // ---------- Open ----------
     const Open = async () => {
-        if (!isUrl) {
-            ToastAndroid.show('Yeh link nahi hai', ToastAndroid.SHORT)
+        if (!openLink) {
+            ToastAndroid.show('Yeh open nahi ho sakta', ToastAndroid.SHORT)
             return
         }
         try {
-            await Linking.openURL(item.content)
+            await Linking.openURL(openLink)
         } catch (error) {
             console.log(error)
-            ToastAndroid.show('Link open nahi ho saka', ToastAndroid.SHORT)
+            ToastAndroid.show('Open nahi ho saka', ToastAndroid.SHORT)
         }
     }
 
     // ---------- Share ----------
     const send = async () => {
         try {
-            await Share.share({ message: item.content ?? '' })
+            await Share.share({ message: value })
         } catch (err) {
             console.log(err)
         }
@@ -47,34 +85,24 @@ const ScanHistoryCard = ({ item }) => {
 
     // ---------- Copy ----------
     const Copy = () => {
-        Clipboard.setString(item.content ?? '')
+        Clipboard.setString(value)
         ToastAndroid.show('Copied!', ToastAndroid.SHORT)
     }
 
     return (
         <View>
-            {/* Scan ki photo (sirf tab dikhegi jab path mila ho) */}
-            {item.image ? (
-                <View style={styles.image}>
-                    <Image
-                        source={{ uri: `file://${item.image}` }}
-                        style={{ height: 150, width: 150 }}
-                    />
-                </View>
-            ) : null}
-
-            <View style={{ width: 300, alignSelf: 'center', marginBottom: 10 }}>
+            <View style={{ width: 300, alignSelf: 'center', marginVertical: 10 }}>
                 {/* Upar wali row */}
                 <View style={DropDown ? styles.bordercard : styles.card}>
                     <Ionicons
-                        name={isUrl ? 'link' : 'text'}
+                        name={ICONS[type] ?? 'text'}
                         size={25}
                         color={'#706d6d'}
                     />
 
                     <View>
                         <Text style={{ fontWeight: 'bold', color: '#706d6d' }}>
-                            {isUrl ? 'URL' : 'Text'}
+                            {type.toUpperCase()}
                         </Text>
                         <View style={{ flexDirection: 'row' }}>
                             <Text style={styles.dateTime}>{date.toLocaleDateString()}</Text>
@@ -97,17 +125,17 @@ const ScanHistoryCard = ({ item }) => {
                 {DropDown && (
                     <View style={styles.dropcard}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold' }}>{isUrl ? 'URL:: ' : 'Text:: '}</Text>
+                            <Text style={{ fontWeight: 'bold' }}>{type.toUpperCase()}:: </Text>
                             <ScrollView
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
                                 style={{ flex: 1 }}
                             >
-                                <Text selectable>{item.content}</Text>
+                                <Text selectable>{value}</Text>
                             </ScrollView>
                         </View>
 
-                        {/* Open / Copy / Share buttons */}
+                        {/* Open / Copy / Share / QR / Delete buttons */}
                         <View style={styles.buttonsRow}>
                             <View>
                                 <View style={styles.iconCard}>
@@ -135,10 +163,50 @@ const ScanHistoryCard = ({ item }) => {
                                 </View>
                                 <Text style={styles.text}>Share</Text>
                             </View>
+
+                            {/* QR button: sirf generate mein (showQr) */}
+                            {showQr && (
+                                <View>
+                                    <View style={styles.iconCard}>
+                                        <TouchableOpacity onPress={() => setQrOpen(true)}>
+                                            <Ionicons name='qr-code-outline' size={25} />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.text}>QR</Text>
+                                </View>
+                            )}
+
+                            {/* Delete button: sirf jab onDelete mile */}
+                            {onDelete && (
+                                <View>
+                                    <View style={styles.iconCard}>
+                                        <TouchableOpacity onPress={onDelete}>
+                                            <Ionicons name='trash-outline' size={25} color='#c0392b' />
+                                        </TouchableOpacity>
+                                    </View>
+                                    <Text style={styles.text}>Delete</Text>
+                                </View>
+                            )}
                         </View>
                     </View>
                 )}
             </View>
+
+            {/* QR popup */}
+            <Modal
+                visible={qrOpen}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setQrOpen(false)}>
+                {/* andhera background, is par tap karne se band ho jata hai */}
+                <Pressable style={styles.overlay} onPress={() => setQrOpen(false)}>
+                    {/* andar wale box par tap se band na ho */}
+                    <Pressable style={styles.popup} onPress={() => {}}>
+                        <QRCode value={value || ' '} size={220} />
+                        <Text style={styles.popupType}>{type.toUpperCase()}</Text>
+                    </Pressable>
+                </Pressable>
+            </Modal>
         </View>
     )
 }
@@ -183,6 +251,7 @@ const styles = StyleSheet.create({
     },
     buttonsRow: {
         flexDirection: 'row',
+        flexWrap: 'wrap', // 5 buttons ek row mein na aayein to neeche chale jayen
         marginVertical: 20,
         justifyContent: 'center',
     },
@@ -192,30 +261,39 @@ const styles = StyleSheet.create({
         paddingRight: 2,
     },
     iconCard: {
-        padding: 15,
+        padding: 10,
         borderWidth: 1,
         borderRadius: 12,
         borderColor: '#E5E5E5',
         backgroundColor: '#fff',
         elevation: 7,
-        marginHorizontal: 10,
+        marginHorizontal: 4,
+        marginBottom: 4,
     },
     text: {
-        marginTop: 8,
+        marginTop: 4,
+        marginBottom: 8,
         textAlign: 'center',
     },
-    image: {
-        marginVertical: 20,
-        alignSelf: 'center',
-        height: 170,
-        width: 170,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: '#E5E5E5',
-        backgroundColor: '#fff',
+
+    // QR popup
+    overlay: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 7,
+    },
+    popup: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 24,
+        alignItems: 'center',
+        elevation: 10,
+    },
+    popupType: {
+        marginTop: 16,
+        fontWeight: 'bold',
+        color: '#706d6d',
     },
 })
 

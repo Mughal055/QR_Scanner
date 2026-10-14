@@ -16,7 +16,7 @@ const useWhatsappHook = () => {
     const digits = phone.replace(/\D/g, '')
     const text = message.trim() ? `?text=${encodeURIComponent(message)}` : ''
     const value = `https://wa.me/${digits}${text}`
-    navigation.navigate('QR', { qrData: value })
+    navigation.navigate('QR', { qrData: value, type: 'whatsapp' })
   }
 
   return { phone, setPhone, message, setMessage, onClear, handleCreate }

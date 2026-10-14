@@ -15,7 +15,7 @@ const useSmsHook = () => {
     // spaces aur dashes hata do, sirf digits aur + rakho
     const cleanedPhone = phone.replace(/[^\d+]/g, '')
     const value = `SMSTO:${cleanedPhone}:${message}`
-    navigation.navigate('QR', { qrData: value })
+    navigation.navigate('QR', { qrData: value, type: 'sms' })
   }
 
   return { phone, setPhone, message, setMessage, onClear, handleCreate }

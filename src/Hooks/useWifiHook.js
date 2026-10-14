@@ -22,7 +22,7 @@ const useWifiHook = () => {
       encryption === 'nopass'
         ? `WIFI:T:nopass;S:${name};;`
         : `WIFI:T:${encryption};S:${name};P:${esc(password)};;`
-    navigation.navigate('QR', { qrData: value })
+    navigation.navigate('QR', { qrData: value , type: 'wifi'})
   }
 
   return {

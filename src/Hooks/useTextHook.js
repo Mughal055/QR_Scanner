@@ -10,7 +10,7 @@ const useTextHook = () => {
   const handleCreate = () => {
     // text khali ho to default text, QR library khali value par error deti hai
     const value = text.trim() ? text : 'Hello'
-    navigation.navigate('QR', { qrData: value })
+    navigation.navigate('QR', { qrData: value, type: 'text' })
   }
 
   return { text, setText, onClear, handleCreate }
