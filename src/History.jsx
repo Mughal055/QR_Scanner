@@ -5,11 +5,14 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import ScanHistoryCard from './component/ScanHistoryCard'
 import { useFocusEffect } from '@react-navigation/native'
 import { getScan, getGenerate, delGenerate, delScan } from './Database/Models'        // NEW
+import { useMMKVBoolean } from 'react-native-mmkv'                                    // DARK
 
 const History = () => {
     const [ActiveTab, setActiveTab] = useState(true)
     const [scan, setScan] = useState([])
     const [items, setItems] = useState([])                                   // NEW: generate ki list
+    // DARK: Settings mein Dark Mode badalte hi ye screen khud update ho jati hai
+    const [dark] = useMMKVBoolean('darkTheme')
 
     // NEW: generate list dobara load karne ka function
     const loadGenerate = async () => {
@@ -38,7 +41,8 @@ const History = () => {
     )
 
     return (
-        <SafeAreaView style={{ flex: 1, }}>
+        // DARK: poori screen ka background
+        <SafeAreaView style={{ flex: 1, backgroundColor: dark ? '#121212' : '#fff' }}>
             <Header title={'History'} />
 
             {/*  scanner Content */}
@@ -47,7 +51,7 @@ const History = () => {
                     style={{ flex: 1 }}
                     data={scan}
                     keyExtractor={(item) => String(item.id)}
-                    ListEmptyComponent={<Text style={styles.text}>There is no scan history</Text>}
+                    ListEmptyComponent={<Text style={[styles.text, dark && styles.textDark]}>There is no scan history</Text>}
                     renderItem={({ item }) => <ScanHistoryCard item={item} onDelete={async () => {
             await delScan(item.id)  
             loadScan() // database se hatao
@@ -63,7 +67,7 @@ const History = () => {
         data={items}
         keyExtractor={item => String(item.id)}
         contentContainerStyle={{ paddingTop: 20, paddingBottom: 40 }}
-        ListEmptyComponent={<Text style={styles.text}>There is no generate history</Text>}
+        ListEmptyComponent={<Text style={[styles.text, dark && styles.textDark]}>There is no generate history</Text>}
         renderItem={({ item }) => (
     <ScanHistoryCard
         item={item}
@@ -80,7 +84,7 @@ const History = () => {
             {/* toggle btn */}
             <View style={{ justifyContent: 'flex-end', marginVertical: 15 }}>
                 <View style={ActiveTab ? { flexDirection: 'row', justifyContent: 'center' } : { flexDirection: 'row-reverse', justifyContent: 'center' }}>
-                    <View style={styles.activeView} />
+                    <View style={[styles.activeView, dark && styles.activeViewDark]} />
                     <TouchableOpacity onPress={() => setActiveTab(!ActiveTab)}>
                         <View style={styles.unActiveView} />
                     </TouchableOpacity>
@@ -88,8 +92,8 @@ const History = () => {
 
                 {/* toggle text */}
                 <View >
-                    {ActiveTab && <Text style={styles.text}>Scanned History</Text>}
-                    {!ActiveTab && <Text style={styles.text}>Generated History</Text>}
+                    {ActiveTab && <Text style={[styles.text, dark && styles.textDark]}>Scanned History</Text>}
+                    {!ActiveTab && <Text style={[styles.text, dark && styles.textDark]}>Generated History</Text>}
                 </View>
             </View>
         </SafeAreaView>
@@ -97,8 +101,12 @@ const History = () => {
 }
 const styles = StyleSheet.create({
     activeView: { borderColor: '#000', borderWidth: 2, borderRadius: 15, margin: 5, padding: 2, width: 32, height: 17 },
+    // DARK: dark mein toggle ka border safed
+    activeViewDark: { borderColor: '#fff' },
     unActiveView: { borderColor: '#6e6c6c', borderWidth: 2, borderRadius: 50, margin: 5, padding: 2, width: 17, height: 17 },
     mainView: { flexDirection: 'row' },
-    text: { textAlign: 'center', fontWeight: 'bold' }
+    text: { textAlign: 'center', fontWeight: 'bold' },
+    // DARK: dark mein text safed
+    textDark: { color: '#fff' }
 })
 export default History

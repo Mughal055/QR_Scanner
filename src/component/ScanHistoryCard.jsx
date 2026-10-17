@@ -14,6 +14,7 @@ import React, { useState } from 'react'
 import Ionicons from '@react-native-vector-icons/ionicons'
 import Clipboard from '@react-native-clipboard/clipboard'
 import QRCode from 'react-native-qrcode-svg'
+import { useMMKVBoolean } from 'react-native-mmkv'                // DARK
 
 // type ke hisaab se icon
 const ICONS = {
@@ -48,6 +49,9 @@ const getOpenLink = (type, value) => {
 const ScanHistoryCard = ({ item, onDelete, showQr }) => {
     const [DropDown, setDropDown] = useState(false)
     const [qrOpen, setQrOpen] = useState(false) // QR popup
+    // DARK: Settings mein Dark Mode badalte hi card khud update ho jata hai
+    // (hook hamesha `if (!item) return null` se pehle hona chahiye)
+    const [dark] = useMMKVBoolean('darkTheme')
 
     // hooks ke baad hi return karein (hooks ka order na bigde)
     if (!item) return null
@@ -59,6 +63,11 @@ const ScanHistoryCard = ({ item, onDelete, showQr }) => {
     const type = item.type ?? (isUrl ? 'url' : 'text')
     const date = item.created_at ? new Date(item.created_at) : new Date()
     const openLink = getOpenLink(type, value)
+
+    // DARK: rang
+    const iconColor = dark ? '#fff' : '#000'
+    const textColor = dark ? '#fff' : '#000'
+    const subColor = dark ? '#b0b0b0' : '#706d6d'
 
     // ---------- Open ----------
     const Open = async () => {
@@ -93,20 +102,20 @@ const ScanHistoryCard = ({ item, onDelete, showQr }) => {
         <View>
             <View style={{ width: 300, alignSelf: 'center', marginVertical: 10 }}>
                 {/* Upar wali row */}
-                <View style={DropDown ? styles.bordercard : styles.card}>
+                <View style={[DropDown ? styles.bordercard : styles.card, dark && styles.cardDark]}>
                     <Ionicons
                         name={ICONS[type] ?? 'text'}
                         size={25}
-                        color={'#706d6d'}
+                        color={subColor}
                     />
 
                     <View>
-                        <Text style={{ fontWeight: 'bold', color: '#706d6d' }}>
+                        <Text style={{ fontWeight: 'bold', color: subColor }}>
                             {type.toUpperCase()}
                         </Text>
                         <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.dateTime}>{date.toLocaleDateString()}</Text>
-                            <Text style={styles.dateTime}>
+                            <Text style={[styles.dateTime, dark && styles.dateTimeDark]}>{date.toLocaleDateString()}</Text>
+                            <Text style={[styles.dateTime, dark && styles.dateTimeDark]}>
                                 {date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </Text>
                         </View>
@@ -116,75 +125,75 @@ const ScanHistoryCard = ({ item, onDelete, showQr }) => {
                         <Ionicons
                             name={DropDown ? 'chevron-up' : 'chevron-down'}
                             size={25}
-                            color={'#706d6d'}
+                            color={subColor}
                         />
                     </TouchableOpacity>
                 </View>
 
                 {/* Dropdown */}
                 {DropDown && (
-                    <View style={styles.dropcard}>
+                    <View style={[styles.dropcard, dark && styles.dropcardDark]}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontWeight: 'bold' }}>{type.toUpperCase()}:: </Text>
+                            <Text style={{ fontWeight: 'bold', color: textColor }}>{type.toUpperCase()}:: </Text>
                             <ScrollView
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
                                 style={{ flex: 1 }}
                             >
-                                <Text selectable>{value}</Text>
+                                <Text selectable style={{ color: textColor }}>{value}</Text>
                             </ScrollView>
                         </View>
 
                         {/* Open / Copy / Share / QR / Delete buttons */}
                         <View style={styles.buttonsRow}>
                             <View>
-                                <View style={styles.iconCard}>
+                                <View style={[styles.iconCard, dark && styles.iconCardDark]}>
                                     <TouchableOpacity onPress={Open}>
-                                        <Ionicons name='open-outline' size={25} />
+                                        <Ionicons name='open-outline' size={25} color={iconColor} />
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.text}>Open</Text>
+                                <Text style={[styles.text, { color: textColor }]}>Open</Text>
                             </View>
 
                             <View>
-                                <View style={styles.iconCard}>
+                                <View style={[styles.iconCard, dark && styles.iconCardDark]}>
                                     <TouchableOpacity onPress={Copy}>
-                                        <Ionicons name='copy-outline' size={25} />
+                                        <Ionicons name='copy-outline' size={25} color={iconColor} />
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.text}>Copy</Text>
+                                <Text style={[styles.text, { color: textColor }]}>Copy</Text>
                             </View>
 
                             <View>
-                                <View style={styles.iconCard}>
+                                <View style={[styles.iconCard, dark && styles.iconCardDark]}>
                                     <TouchableOpacity onPress={send}>
-                                        <Ionicons name='share-social' size={25} />
+                                        <Ionicons name='share-social' size={25} color={iconColor} />
                                     </TouchableOpacity>
                                 </View>
-                                <Text style={styles.text}>Share</Text>
+                                <Text style={[styles.text, { color: textColor }]}>Share</Text>
                             </View>
 
                             {/* QR button: sirf generate mein (showQr) */}
                             {showQr && (
                                 <View>
-                                    <View style={styles.iconCard}>
+                                    <View style={[styles.iconCard, dark && styles.iconCardDark]}>
                                         <TouchableOpacity onPress={() => setQrOpen(true)}>
-                                            <Ionicons name='qr-code-outline' size={25} />
+                                            <Ionicons name='qr-code-outline' size={25} color={iconColor} />
                                         </TouchableOpacity>
                                     </View>
-                                    <Text style={styles.text}>QR</Text>
+                                    <Text style={[styles.text, { color: textColor }]}>QR</Text>
                                 </View>
                             )}
 
                             {/* Delete button: sirf jab onDelete mile */}
                             {onDelete && (
                                 <View>
-                                    <View style={styles.iconCard}>
+                                    <View style={[styles.iconCard, dark && styles.iconCardDark]}>
                                         <TouchableOpacity onPress={onDelete}>
                                             <Ionicons name='trash-outline' size={25} color='#c0392b' />
                                         </TouchableOpacity>
                                     </View>
-                                    <Text style={styles.text}>Delete</Text>
+                                    <Text style={[styles.text, { color: textColor }]}>Delete</Text>
                                 </View>
                             )}
                         </View>
@@ -192,7 +201,7 @@ const ScanHistoryCard = ({ item, onDelete, showQr }) => {
                 )}
             </View>
 
-            {/* QR popup */}
+            {/* QR popup: background hamesha safed, taake QR scan ho sake */}
             <Modal
                 visible={qrOpen}
                 transparent
@@ -239,6 +248,11 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 12,
         borderTopRightRadius: 12,
     },
+    // DARK: upar wali row
+    cardDark: {
+        backgroundColor: '#1e1e1e',
+        borderColor: '#333',
+    },
     dropcard: {
         padding: 15,
         borderWidth: 1,
@@ -248,6 +262,11 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 12,
         backgroundColor: '#fff',
         elevation: 3,
+    },
+    // DARK: dropdown
+    dropcardDark: {
+        backgroundColor: '#1e1e1e',
+        borderColor: '#333',
     },
     buttonsRow: {
         flexDirection: 'row',
@@ -260,6 +279,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         paddingRight: 2,
     },
+    // DARK: date aur time
+    dateTimeDark: {
+        color: '#9a9a9a',
+    },
     iconCard: {
         padding: 10,
         borderWidth: 1,
@@ -269,6 +292,11 @@ const styles = StyleSheet.create({
         elevation: 7,
         marginHorizontal: 4,
         marginBottom: 4,
+    },
+    // DARK: Open / Copy / Share / QR / Delete ke buttons
+    iconCardDark: {
+        backgroundColor: '#2a2a2a',
+        borderColor: '#444',
     },
     text: {
         marginTop: 4,

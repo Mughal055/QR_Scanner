@@ -1,6 +1,7 @@
 import { View, TextInput, StyleSheet } from 'react-native'
 import React from 'react'
 import Ionicons from '@react-native-vector-icons/ionicons'
+import { useMMKVBoolean } from 'react-native-mmkv'                // DARK
 
 // Icon wala input, har screen mein yahi use hoga (WiFi aur VCard jaisa design)
 const IconInput = ({
@@ -12,6 +13,9 @@ const IconInput = ({
   multiline = false,
   last = false, // aakhri input ke neeche extra gap
 }) => {
+  // DARK: Settings mein Dark Mode badalte hi ye input khud update ho jata hai
+  const [dark] = useMMKVBoolean('darkTheme')
+
   return (
     <View
       style={[
@@ -27,12 +31,13 @@ const IconInput = ({
       />
       <TextInput
         placeholder={placeholder}
+        placeholderTextColor={dark ? '#8a8a8a' : '#9c9494'}       // DARK
         value={value}
         onChangeText={onChangeText}
         keyboardType={keyboardType}
         autoCapitalize={keyboardType ? 'none' : 'sentences'}
         multiline={multiline}
-        style={[styles.input, multiline && styles.inputMultiline]}
+        style={[styles.input, dark && styles.inputDark, multiline && styles.inputMultiline]}
       />
     </View>
   )
@@ -53,7 +58,9 @@ const styles = StyleSheet.create({
   last: { marginBottom: 20 },
   icon: { marginRight: 10 },
   iconMultiline: { marginTop: 18 },
-  input: { flex: 1, paddingVertical: 20, fontSize: 16 },
+  input: { flex: 1, paddingVertical: 20, fontSize: 16, color: '#000' },
+  // DARK: dark mein likha hua text safed
+  inputDark: { color: '#fff' },
   inputMultiline: { minHeight: 100, textAlignVertical: 'top' },
 })
 

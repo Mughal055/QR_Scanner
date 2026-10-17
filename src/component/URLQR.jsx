@@ -1,6 +1,7 @@
 import { View, TextInput } from 'react-native'
 import React from 'react'
 import HTTP from './HTTP'
+import { useMMKVBoolean } from 'react-native-mmkv'                // DARK
 
 const PREFIXES = [
   { title: 'http://', icon: 'podium-outline' },
@@ -10,6 +11,9 @@ const PREFIXES = [
 ]
 
 const URLQR = ({ input, setInput }) => {
+  // DARK: Settings mein Dark Mode badalte hi ye input khud update ho jata hai
+  const [dark] = useMMKVBoolean('darkTheme')
+
   return (
     <View>
       <View
@@ -32,6 +36,7 @@ const URLQR = ({ input, setInput }) => {
       <View>
         <TextInput
           placeholder="Enter URL"
+          placeholderTextColor={dark ? '#8a8a8a' : '#9c9494'}   // DARK
           value={input}
           onChangeText={setInput}
           style={{
@@ -40,6 +45,7 @@ const URLQR = ({ input, setInput }) => {
             margin: 20,
             padding: 20,
             borderColor: '#9c9494',
+            color: dark ? '#fff' : '#000',                      // DARK: likha hua text
           }}
         />
       </View>

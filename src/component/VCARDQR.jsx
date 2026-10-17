@@ -1,20 +1,27 @@
 import { View, TextInput, StyleSheet } from 'react-native'
 import React from 'react'
 import Ionicons from '@react-native-vector-icons/ionicons'
+import { useMMKVBoolean } from 'react-native-mmkv'                // DARK
 
-const Field = ({ icon, placeholder, value, onChangeText, keyboardType, half }) => (
-  <View style={[styles.box, half && styles.half]}>
-    <Ionicons name={icon} size={22} color="#9c9494" style={styles.icon} />
-    <TextInput
-      placeholder={placeholder}
-      value={value}
-      onChangeText={onChangeText}
-      keyboardType={keyboardType}
-      autoCapitalize={keyboardType ? 'none' : 'sentences'}
-      style={styles.input}
-    />
-  </View>
-)
+const Field = ({ icon, placeholder, value, onChangeText, keyboardType, half }) => {
+  // DARK: har Field apna hook khud lagata hai (Field alag component hai)
+  const [dark] = useMMKVBoolean('darkTheme')
+
+  return (
+    <View style={[styles.box, half && styles.half]}>
+      <Ionicons name={icon} size={22} color="#9c9494" style={styles.icon} />
+      <TextInput
+        placeholder={placeholder}
+        placeholderTextColor={dark ? '#8a8a8a' : '#9c9494'}       // DARK
+        value={value}
+        onChangeText={onChangeText}
+        keyboardType={keyboardType}
+        autoCapitalize={keyboardType ? 'none' : 'sentences'}
+        style={[styles.input, dark && styles.inputDark]}
+      />
+    </View>
+  )
+}
 
 const VCARDQR = ({ vcard }) => {
   return (
@@ -73,7 +80,9 @@ const styles = StyleSheet.create({
   },
   half: { flex: 1 },
   icon: { marginRight: 8 },
-  input: { flex: 1, paddingVertical: 18, fontSize: 15 },
+  input: { flex: 1, paddingVertical: 18, fontSize: 15, color: '#000' },
+  // DARK: dark mein likha hua text safed
+  inputDark: { color: '#fff' },
 })
 
 export default VCARDQR

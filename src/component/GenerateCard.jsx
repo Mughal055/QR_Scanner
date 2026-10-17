@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native'
 import React from 'react'
 import Ionicons from '@react-native-vector-icons/ionicons'
+import { useMMKVBoolean } from 'react-native-mmkv'                // DARK
 import URLQR from './URLQR'
 import TEXTQR from './TEXTQR'
 import EMAILQR from './EMAILQR'
@@ -42,12 +43,15 @@ const GenerateCard = ({
   encryption,
   setEncryption,
 }) => {
+  // DARK: Settings mein Dark Mode badalte hi ye card khud update ho jata hai
+  const [dark] = useMMKVBoolean('darkTheme')
+
   return (
     <ScrollView
       contentContainerStyle={styles.scroll}
       keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
-      <View style={styles.container}>
+      <View style={[styles.container, dark && styles.containerDark]}>
         {type === 'url' && <URLQR input={input} setInput={setInput} />}
 
         {type === 'text' && <TEXTQR input={input} setInput={setInput} />}
@@ -110,15 +114,15 @@ const GenerateCard = ({
 
       <View style={{ flexDirection: 'row' }}>
         {/* Clear button */}
-        <TouchableOpacity onPress={onClear} style={styles.card}>
-          <Ionicons name="trash-bin" size={20} />
-          <Text style={styles.btnText}>Clear</Text>
+        <TouchableOpacity onPress={onClear} style={[styles.card, dark && styles.cardDark]}>
+          <Ionicons name="trash-bin" size={20} color={dark ? '#fff' : '#000'} />
+          <Text style={[styles.btnText, dark && styles.btnTextDark]}>Clear</Text>
         </TouchableOpacity>
 
         {/* Create button */}
-        <TouchableOpacity onPress={handleCreate} style={styles.card}>
-          <Ionicons name="qr-code-outline" size={20} />
-          <Text style={styles.btnText}>Create</Text>
+        <TouchableOpacity onPress={handleCreate} style={[styles.card, dark && styles.cardDark]}>
+          <Ionicons name="qr-code-outline" size={20} color={dark ? '#fff' : '#000'} />
+          <Text style={[styles.btnText, dark && styles.btnTextDark]}>Create</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -141,6 +145,11 @@ const styles = StyleSheet.create({
     elevation: 7,
     marginBottom: '5%',
   },
+  // DARK: card ka background aur border
+  containerDark: {
+    backgroundColor: '#1e1e1e',
+    borderColor: '#333',
+  },
   card: {
     flexDirection: 'row',
     width: 100,
@@ -154,10 +163,19 @@ const styles = StyleSheet.create({
     elevation: 7,
     marginHorizontal: 40,
   },
+  // DARK: Clear / Create buttons
+  cardDark: {
+    backgroundColor: '#1e1e1e',
+    borderColor: '#333',
+  },
   btnText: {
     fontWeight: 'bold',
     marginLeft: 10,
     fontSize: 15,
+  },
+  // DARK: button ka text safed
+  btnTextDark: {
+    color: '#fff',
   },
 })
 
